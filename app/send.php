@@ -1,45 +1,64 @@
 <?php
 
-$emailAddress = 'esetnod1111@gmail.com';
-// Адрес сайта, с которого он отправляет сообщения
-$siteEmail = 'info@mysite.com';
-// Тема сообщения
-$emailTheme = 'Письмо с моего сайта';
+$sendto = "esetnod1111@gmail.com"; // почта, на которую будет приходить письмо !!! Измените на свою!!!
+$username = $_POST['name']; // сохраняем в переменную данные полученные из поля c именем
+$usertel = $_POST['phone']; // сохраняем в переменную данные полученные из поля c телефонным номером
 
-// Проверяем была ли отправлена форма
-if(isset($_POST['sended'])) {
-    // Переменная, в которую будем собирать текст нашего сообщения
-    $message = 'Форма была отправлена!<br />';
-    // Текстовый инпут теперь ы переменной $first
-    $first = isset($_POST['name']) ? $_POST['name'] : '';
-    $message .= 'В текстовый инпут ввели: ' . htmlspecialchars($first) . '<br />';
-    $second = isset($_POST['phone']) ? $_POST['phone'] : '';
-    $message .= 'В текстовый инпут ввели: ' . htmlspecialchars($second) . '<br />';
-    // Чекбоксы
-    if(isset($_POST['one']))
-        $message .= 'Первый чекбокс был выбран<br />';
-    if(isset($_POST['two']))
-        $message .= 'Второй чекбокс был выбран<br />';
+// проверяем наличие данных в чекбоксе и сохраняем их
 
-    // Переключатели
-    $sixth = isset($_POST['pay']) ? $_POST['pay'] : '';
-    if(empty($sixth))
-        $message .= 'Никакой переключатель не был выбран<br />';
-    else
-        $message .= 'Был выбран переключатель, у которого value = ' . htmlspecialchars($sixth) . '<br />';
-
-    $headers = array(
-        'MIME-Version: 1.0',
-        'From: ' . $siteEmail,
-        'Reply-To: ' . $siteEmail,
-        'Content-Type: text/html; charset=utf-8'
-    );
-    if(mail($emailAddress, $emailTheme, $message, implode("\r\n", $headers)))
-        $message .= '<br />PHP считает, что письмо отправлено, проверяй ящик! Загляни в спам, если письма не видно';
-    else
-        $message .= '<br />PHP считает, что письмо отправить не удалось...';
-    // А также покажем на странице введённые данные и результат отправки письма
-    echo($message);
+$aCheck = $_POST['box'];
+if(empty($aCheck))
+{
+    echo("Вы ничего не выбрали.");
 }
+else
+{
+    $N = count($aCheck);
+    echo("Вы выбрали $N здание(й): ");
+    for($i=0; $i < $N; $i++)
+    {
+        echo($aCheck[$i] . " ");
+    }
+}
+
+// проверяем наличие данных в радиокнопке  и сохраняем их
+$radio = '';
+if (empty($_POST["radio"]))
+{
+    $radio = "SEO оптимизация не требуется";
+}
+elseif(isset($_POST['radio']) &&
+    $_POST['radio'] == '1')
+{
+    echo "Требуется доступ.";
+}
+else
+{
+    echo "Доступ не нужен.";
+}
+
+// Формирование заголовка письма
+$subject = "Новое сообщение";
+$headers = "From: " . strip_tags($sendto) . "\r\n";
+$headers .= "Reply-To: ". strip_tags($sendto) . "\r\n";
+$headers .= "MIME-Version: 1.0\r\n";
+$headers .= "Content-Type: text/html;charset=utf-8 \r\n";
+
+// Формирование тела письма
+$msg = "<html><body style='font-family:Arial,sans-serif;'>";
+$msg .= "<h2 style='font-weight:bold;border-bottom:1px dotted #ccc;'>Cообщение с сайта</h2>\r\n";
+$msg .= "<p><strong>От кого:</strong> ".$username."</p>\r\n";
+$msg .= "<p><strong>Телефон:</strong> ".$usertel."</p>\r\n";
+$msg .= "<p><strong>Дополнительные параметры:<br/> </strong> ".$aCheck."</p>\r\n";
+$msg .= "<p>".$radio."</p>\r\n";
+$msg .= "</body></html>";
+
+// отправка сообщения
+if(@mail($sendto, $subject, $msg, $headers)) {
+    echo "<p>Ваше сообщение отправлено</p>"; // Здесь может быть любой html код. Вместо картинки можно задать div и в нем что угодно
+} else {
+    echo "<p>Сообщение почему-то не отправилось...</p>"; // Здесь может быть любой html код. Вместо картинки можно задать div и в нем что угодно
+}
+
 
 
