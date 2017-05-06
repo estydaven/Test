@@ -5,37 +5,8 @@ $username = $_POST['name']; // сохраняем в переменную дан
 $usertel = $_POST['phone']; // сохраняем в переменную данные полученные из поля c телефонным номером
 
 // проверяем наличие данных в чекбоксе и сохраняем их
-
-$aCheck = '';
-if(empty($aCheck))
-{
-    $aCheck = "Вы ничего не выбрали";
-}
-elseif(isset($_POST['box']) &&
-    $_POST['box'] == 'On')
-{
-    $aCheck = "Требуется доступ.";
-}
-else
-{
-    $aCheck = "Доступ не нужен.";
-}
-
-// проверяем наличие данных в радиокнопке  и сохраняем их
-$radio = '';
-if (empty($_POST["radio"]))
-{
-    $radio = "Данные по оплате не указаны";
-}
-elseif(isset($_POST['radio']) &&
-    $_POST['radio'] == '1')
-{
-    $radio =  "Требуется доступ.";
-}
-else
-{
-    $radio =  "Доступ не нужен.";
-}
+if (isset($_POST['checkbox1'])) echo $_POST['checkbox1'];
+if (isset($_POST['radiobutton'])) echo $_POST['radiobutton'];
 
 // Формирование заголовка письма
 $subject = "Новое сообщение";
